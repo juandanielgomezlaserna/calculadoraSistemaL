@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13- Challenge</title>
+   <style>
+    @font-face {
+        font-family: 'fuentePapa';
+        src: url('./fonts/SistemaL-Regular.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    body.darkMode {
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    main {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    header.headerDark {
+        color: #2196f3; 
+        font-family: 'Press Start 2P', cursive;
+        text-align: center;
+        padding: 15px 0;
+        background-color: #ffffff;
+        border-bottom: 2px solid #2196f3;
+        border-radius: 10px 10px 0 0;
+        font-size: 14px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    div.calculator {
+        width: 100%;
+        height: auto;
+        background-color: #ffffff; 
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); 
+        overflow: hidden;
+    }
+
+    header.display {
+        position: relative;
+        height: 140px;
+        background-color: #f7f7f7; 
+        padding: 15px;
+        border-bottom: 1px solid #e0e0e0; 
+    }
+
+    div.mode {
+        width: 80px;
+        height: 40px;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: url("./images/calculator/mode.svg") no-repeat center;
+        background-size: contain;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    div.mode:hover {
+        transform: scale(1.4);
+    }
+
+    input.operation {
+        font-family: 'fuentePapa', sans-serif;
+        position: absolute;
+        right: 15px;
+        top: 70px;
+        text-align: right;
+        background-color: transparent;
+        border: none;
+        font-size: 22px;
+        font-weight: 300;
+        width: calc(100% - 30px);
+        outline: none;
+        color: #333; 
+    }
+
+    h4.result {
+        font-family: 'fuentePapa', sans-serif;
+        position: absolute;
+        right: 15px;
+        top: 100px;
+        text-align: right;
+        font-size: 36px;
+        font-weight: 400;
+        color: #000;
+        margin: 0;
+        width: calc(100% - 30px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    footer.buttons {
+        background-color: #f5f5f5; 
+        border-radius: 0 0 10px 10px;
+        padding: 15px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    button {
+        font-family: 'fuentePapa', sans-serif;
+        border: none;
+        border-radius: 8px;
+        font-size: 24px;
+        height: 60px;
+        cursor: pointer;
+        background-color: #f9f9f9; 
+        color: #222;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    button:hover {
+        background-color: #eaeaea; 
+        transform: scale(1.05);
+    }
+
+    button:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15); 
+    }
+
+    button.btn-clear,button.btn-back,
+    button.btn-pow,button.btn-mod,
+    button.btn-prod,button.btn-subs,
+    button.btn-add,button.btn-dot,
+    button.btn-div {
+        color: #0d47a1; 
+        font-weight: bold;
+    }
+
+    button.btn-equal {
+        background-color: #2196f3; 
+        color: white;
+        font-size: 28px;
+    }
+
+    button.btn-dot {
+        font-size: 36px;
+        padding-bottom: 8px;
+    }
+
+    div.calculator.dark {
+        background-color: #555;
+    }
+
+    div.calculator.dark header.display {
+        background-color: #444;
+    }
+
+    div.calculator.dark div.mode {
+        background: url("./images/calculator/mode-dark.svg") no-repeat center;
+        background-size: contain;
+        width: 80px;
+    }
+
+    div.calculator.dark input.operation {
+        color: #ccc;
+    }
+
+    div.calculator.dark h4.result {
+        color: #fff;
+    }
+
+    div.calculator.dark footer.buttons {
+        background-color: #444;
+    }
+
+    div.calculator.dark button {
+        background-color: #666;
+        color: #eee;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+
+    div.calculator.dark button:hover {
+        background-color: #777;
+    }
+
+    div.calculator.dark button.btn-clear,
+    div.calculator.dark button.btn-back,
+    div.calculator.dark button.btn-pow,
+    div.calculator.dark button.btn-mod,
+    div.calculator.dark button.btn-prod,
+    div.calculator.dark button.btn-subs,
+    div.calculator.dark button.btn-add,
+    div.calculator.dark button.btn-dot,
+    div.calculator.dark button.btn-div {
+        color: #FFD700;
+    }
+
+    div.calculator.dark button.btn-equal {
+        background-color: #4cae4c;
+    }
+
+    .normal {
+        font-family: Arial, sans-serif !important;
+    }
+
+    body.darkMode.dark {
+        background-color: #000;
+    }
+
+    header.headerDark.dark {
+        color: #FFD700;
+        background-color: #5a5a5a;
+        border-bottom: 2px solid #FFD700;
+    }
+
+</style>
+</head>
+<body class="darkMode">
+    <main>
+        <header class="headerDark">
+            <h1>Calculadora Sistema L</h1>
+        </header>
+        <section>
+            <div class="calculator">
+                <header class="display">
+                    <div class="mode"></div>
+                    <input type="text" class="operation" readonly>
+                    <h4 class="result"></h4>
+                </header>
+                <footer class="buttons">
+                    <!--  -->
+                    <button class="btn-clear">C</button>
+                    <button class="btn-back">←</button>
+                    <button class="btn-pow" data-opt="">^</button>
+                    <button class="btn-mod" data-opt="">SI</button>
+                    <!--  -->
+                    <button class="btn-1" data-num="1">1</button>
+                    <button class="btn-2" data-num="2">2</button>
+                    <button class="btn-3" data-num="3">3</button>
+                    <button class="btn-prod" data-opt="*">x</button>
+                    <!--  -->
+                    <button class="btn-4" data-num="4">4</button>
+                    <button class="btn-5" data-num="5">5</button>
+                    <button class="btn-6" data-num="6">6</button>
+                    <button class="btn-subs" data-opt="-"> - </button>
+                    <!--  -->
+                    <button class="btn-7" data-num="7">7</button>
+                    <button class="btn-8" data-num="8">8</button>
+                    <button class="btn-9" data-num="9">9</button>
+                    <button class="btn-add" data-opt="+">+</button>
+                    <!--  -->
+                    <button class="btn-div" data-opt="/">÷</button>
+                    <button class="btn-0" data-num="0">0</button>
+                    <button class="btn-dot" data-opt=".">.</button>
+                    <button class="btn-equal">=</button>
+                    <!--  -->
+                </footer>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // isDarkMode
+        const calculator = document.querySelector('.calculator')
+        const darkMode = document.querySelector('.darkMode')
+        const headerDark = document.querySelector('.headerDark')
+        const btnMode    = document.querySelector('.mode')
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)')
+        function detectMode() {
+            if(isDarkMode.matches) {
+                calculator.classList.add('dark')
+                darkMode.classList.add('dark')
+                headerDark.classList.add('dark')
+                //console.log('Mode: Dark')
+            } else {
+                calculator.classList.remove('dark')
+                darkMode.classList.remove('dark')
+                headerDark.classList.remove('dark')
+                //console.log('Mode: Light')
+            }
+        }
+        detectMode()
+        isDarkMode.addListener(detectMode)
+        btnMode.addEventListener('click', () => {
+            calculator.classList.toggle('dark')
+            darkMode.classList.toggle('dark')
+            headerDark.classList.toggle('dark')
+        })
+        // Buttons actions - - - - - - - - -
+        const btnsNumbers = document.querySelectorAll("button[data-num]")
+        const btnsOpers   = document.querySelectorAll("button[data-opt]")
+        const btnClear    = document.querySelector(".btn-clear")
+        const btnBack     = document.querySelector(".btn-back")
+        const btnEqual    = document.querySelector(".btn-equal")
+        const operation   = document.querySelector(".operation")
+        const result      = document.querySelector(".result")
+        let isOper        = false
+
+        function addToOperation(c) {
+            if (validateLength()) {
+                operation.value += c
+            }
+        }
+
+        function validateLength() {
+            if (operation.value.length <= 30) {
+                return true
+            }else{
+                return false
+            }
+        }
+        const btnMod = document.querySelector(".btn-mod")
+        let sistema = true
+
+        btnMod.addEventListener("click", () => {
+            if (sistema) {
+                btnMod.textContent = "SL"
+            }else{
+                btnMod.textContent = "SI"
+            }
+            btnsNumbers.forEach((btn) => {
+                btn.classList.toggle("normal")
+            })
+            result.classList.toggle("normal")
+            operation.classList.toggle("normal")
+            sistema = !sistema
+        })
+
+        btnsNumbers.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                //addToOperation(btn.getAttribute("data-num"))
+                addToOperation(btn.dataset.num)
+                isOper = true
+            })
+        })
+
+        btnsOpers.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                if (isOper) {
+                    addToOperation(btn.dataset.opt)
+                    isOper = false
+                }
+            })
+        })
+
+        btnClear.addEventListener("click", function () {
+            operation.value = ""
+            result.textContent = ""
+        })
+
+        btnEqual.addEventListener("click", function() {
+            if (operation.value.length != 0) {
+                result.textContent = "="+ eval(operation.value)
+                if (result.textContent == "=Infinity" || result.textContent == "=NaN") {
+                    result.textContent = "Indeterminado"
+                }
+            }
+        })
+
+        btnBack.addEventListener("click", () => {
+            operation.value = operation.value.slice(0, -1)
+            if (isNaN(operation.value.slice(-1))) {
+                isOper = false
+            }else{
+                isOper = true
+            }
+        })
+        //Key Events
+        document.addEventListener("keyup", (event) => {
+            console.log(event.keyCode)
+            //0-9 => Keycode: 48,49,50,51,52,53,54,55,56,57
+            // Backspace => keycode: 8
+            // Enter => keycode: 13
+            // Delete => keycode: 46
+            // % => keycode: 16 + 53
+            // + => keycode: 187
+            // - => keycode: 189
+            // / => keycode: 16-55
+            // * => keycode: 
+
+            //alert(event.keyCode)
+
+            switch (event.keyCode) {
+                // numbers 0 to 9 - - - - -
+                case 48:
+                    isOper = true
+                    addToOperation(0)
+                    break;
+                case 49:
+                    isOper = true
+                    addToOperation(1)
+                    break;
+                case 50:
+                    isOper = true
+                    addToOperation(2)
+                    break;
+                case 51:
+                    isOper = true
+                    addToOperation(3)
+                    break;
+                case 52:
+                    isOper = true
+                    addToOperation(4)
+                    break;
+                case 53:
+                    isOper = true
+                    addToOperation(5)
+                    break;
+                case 54:
+                    if (event.shiftKey) {
+                        if (isOper) {
+                            addToOperation("%")
+                            isOper = false
+                        }
+                    }else{
+                        isOper = true
+                        addToOperation(6)
+                    }
+                    break;
+                case 55:
+                    if (event.shiftKey) {
+                        if (isOper) {
+                            ddToOperation("/")
+                            isOper = false
+                        }
+                    }else{
+                        isOper = true
+                        addToOperation(7)
+                    }
+                    break;
+                case 56:
+                    isOper = true
+                    addToOperation(8)
+                    break;
+                case 57:
+                    isOper = true
+                    addToOperation(9)
+                    break;
+                case 46:
+                    operation.value = ""
+                    result.textContent = ""
+                    break;
+                case 8:
+                    operation.value = operation.value.slice(0, -1)
+                    if (isNaN(operation.value.slice(-1))) {
+                        isOper = false
+                    }else{
+                        isOper = true
+                    }
+                    break;
+                case 13:
+                    if (operation.value.length != 0) {
+                        result.textContent = "="+ eval(operation.value)
+                    }
+                    break;
+                case 187:
+                    if (isOper) {
+                        addToOperation("+")
+                        isOper = false
+                    }
+                case 96:
+                    isOper = true
+                    addToOperation(0)
+                    break;
+                case 97:
+                    isOper = true
+                    addToOperation(1)
+                    break;
+                case 98:
+                    isOper = true
+                    addToOperation(2)
+                    break;
+                case 99:
+                    isOper = true
+                    addToOperation(3)
+                    break;
+                case 100:
+                    isOper = true
+                    addToOperation(4)
+                    break;
+                case 101:
+                    isOper = true
+                    addToOperation(5)
+                    break;
+                case 102:
+                    isOper = true
+                    addToOperation(6)
+                    break;
+                case 103:
+                    isOper = true
+                    addToOperation(7)
+                    break;
+                case 104:
+                    isOper = true
+                    addToOperation(8)
+                    break;
+                case 105:
+                    isOper = true
+                    addToOperation(9)
+                    break;
+                case 189:
+                    if (isOper) {
+                        addToOperation("-")
+                        isOper = false
+                    }
+
+                //Default - - - -
+                default:
+                    break;
+            }
+        })
+    </script>
+</body>
+</html>
